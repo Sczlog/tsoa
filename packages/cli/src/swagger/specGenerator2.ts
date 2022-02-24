@@ -409,16 +409,23 @@ export class SpecGenerator2 extends SpecGenerator {
       });
       return this.getSwaggerTypeForEnumType(mergedEnum);
     } else if (typesWithoutUndefined.length === 2 && typesWithoutUndefined.find(typeInUnion => typeInUnion.dataType === 'enum' && typeInUnion.enums.includes(null))) {
-      // Backwards compatible representation of dataType or null, $ref does not allow any sibling attributes, so we have to bail out
       const nullEnumIndex = typesWithoutUndefined.findIndex(type => type.dataType === 'enum' && type.enums.includes(null));
       const typeIndex = nullEnumIndex === 1 ? 0 : 1;
       const swaggerType = this.getSwaggerType(typesWithoutUndefined[typeIndex]);
       const isRef = !!swaggerType.$ref;
 
       if (isRef) {
-        return { type: 'object' };
+        // use allof with x-nullable vendor extension to represent nullable union
+        return {
+          allOf: [swaggerType, { 'x-nullable': true }],
+        };
       } else {
+        // non ref type, just add x-nullable vendor extension
         swaggerType['x-nullable'] = true;
+        if (swaggerType.type === 'array') {
+          // add x-omitempty vendor extension for array types (go swagger)
+          swaggerType['x-omitempty'] = true;
+        }
         return swaggerType;
       }
     } else if (process.env.NODE_ENV !== 'tsoa_test') {
@@ -428,29 +435,27 @@ export class SpecGenerator2 extends SpecGenerator {
     return { type: 'object' };
   }
   protected getSwaggerTypeForIntersectionType(type: Tsoa.IntersectionType) {
-    const properties = type.types.reduce((acc, type) => {
-      if (type.dataType === 'refObject') {
-        let refType = type;
-        refType = this.metadata.referenceTypeMap[refType.refName] as Tsoa.RefObjectType;
-
-        const props =
-          refType &&
-          refType.properties &&
-          refType.properties.reduce((acc, prop) => {
-            return {
-              ...acc,
-              [prop.name]: this.getSwaggerType(prop.type),
-            };
-          }, {});
-        return { ...acc, ...props };
-      } else {
-        process.env.NODE_ENV !== 'tsoa_test' &&
-          // eslint-disable-next-line no-console
-          console.warn('Swagger 2.0 does not fully support this kind of intersection types. If you would like to take advantage of this, please change tsoa.json\'s "specVersion" to 3.');
-        return { ...acc };
-      }
-    }, {});
-    return { type: 'object', properties };
+    let first: Tsoa.Type | undefined = undefined;
+    const allOf = type.types
+      .map((type, index) => {
+        switch (type.dataType) {
+          case 'refObject':
+          case 'refAlias':
+          case 'refEnum':
+            return { $ref: `#/definitions/${type.refName}` };
+          case 'nestedObjectLiteral': {
+            return this.getSwaggerTypeForObjectLiteral(type);
+          }
+          default:
+            if (!index) first = type;
+            return undefined;
+        }
+      })
+      .filter(x => x);
+    if (!allOf.length) {
+      return first ? this.getSwaggerType(first) : { 'x-nullable': true };
+    }
+    return { allOf };
   }
 
   protected getSwaggerTypeForReferenceType(referenceType: Tsoa.ReferenceType): Swagger.BaseSchema {

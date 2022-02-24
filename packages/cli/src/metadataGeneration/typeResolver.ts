@@ -327,7 +327,13 @@ export class TypeResolver {
       }
       const declaration = this.current.typeChecker.getTypeOfSymbolAtLocation(symbol, this.typeNode.objectType);
       try {
-        return new TypeResolver(this.current.typeChecker.typeToTypeNode(declaration, undefined, ts.NodeBuilderFlags.NoTruncation)!, this.current, this.typeNode, this.context, this.referencer).resolve();
+        return new TypeResolver(
+          this.current.typeChecker.typeToTypeNode(declaration, undefined, ts.NodeBuilderFlags.NoTruncation)!,
+          this.current,
+          this.typeNode,
+          this.context,
+          this.referencer,
+        ).resolve();
       } catch {
         throw new GenerateMetadataError(
           `Could not determine the keys on ${this.current.typeChecker.typeToString(
@@ -458,6 +464,16 @@ export class TypeResolver {
         return ['isInt', 'isLong', 'isFloat', 'isDouble'].some(m => m === name);
       });
       if (tags.length === 0) {
+        if (ts.isIndexedAccessTypeNode(parentNode) && ts.isLiteralTypeNode(parentNode.indexType) && ts.isLiteralExpression(parentNode.indexType.literal)) {
+          switch (parentNode.indexType.literal.text) {
+            case 'Int':
+              return { dataType: 'integer' };
+            case 'Long':
+              return { dataType: 'long' };
+            case 'Float':
+              return { dataType: 'double' };
+          }
+        }
         return { dataType: 'double' };
       }
 
