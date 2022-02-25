@@ -387,6 +387,16 @@ export class SpecGenerator2 extends SpecGenerator {
         swaggerType['x-deprecated'] = true;
       }
 
+      if (!property.required) {
+        const swagger3Type = swaggerType as Swagger.Schema3;
+        if (!swagger3Type.allOf || !swagger3Type.allOf.some(type => type['x-nullable'])) {
+          swaggerType['x-nullable'] = true;
+        }
+        if (swaggerType.type === 'array') {
+          swaggerType['x-omitempty'] = true;
+        }
+      }
+
       if (property.extensions) {
         property.extensions.forEach(property => {
           swaggerType[property.key] = property.value;
