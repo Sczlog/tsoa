@@ -390,7 +390,18 @@ export class SpecGenerator2 extends SpecGenerator {
       if (!property.required) {
         const swagger3Type = swaggerType as Swagger.Schema3;
         if (!swagger3Type.allOf || !swagger3Type.allOf.some(type => type['x-nullable'])) {
-          swaggerType['x-nullable'] = true;
+          if (swagger3Type.$ref) {
+            // replace $ref by allOf and $ref
+            swagger3Type.allOf = [
+              {
+                $ref: swagger3Type.$ref,
+              },
+              { 'x-nullable': true },
+            ];
+            delete swagger3Type.$ref;
+          } else {
+            swaggerType['x-nullable'] = true;
+          }
         }
         if (swaggerType.type === 'array') {
           swaggerType['x-omitempty'] = true;
