@@ -1,5 +1,5 @@
 import { ExtendedSpecConfig } from '../cli';
-import { Tsoa, assertNever, Swagger } from '@tsoa/runtime';
+import { Tsoa, assertNever, Swagger } from '@smartx/tsoa-runtime';
 
 export abstract class SpecGenerator {
   constructor(protected readonly metadata: Tsoa.Metadata, protected readonly config: ExtendedSpecConfig) {}

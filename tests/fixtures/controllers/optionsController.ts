@@ -1,4 +1,4 @@
-import { Controller, Options, Route } from '@tsoa/runtime';
+import { Controller, Options, Route } from '@smartx/tsoa-runtime';
 
 @Route('OptionsTest')
 export class OptionsTestController extends Controller {

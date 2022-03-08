@@ -1,7 +1,7 @@
 {
-  "name": "@tsoa/runtime",
+  "name": "@smartx/tsoa-runtime",
   "description": "Build swagger-compliant REST APIs using TypeScript and Node",
-  "version": "4.0.0-beta.0",
+  "version": "0.0.1-rc.3",
   "main": "./dist/index.js",
   "typings": "./dist/index.d.ts",
   "keywords": [
@@ -22,7 +22,7 @@
     "tsc": "tsc",
     "watch": "tsc -w"
   },
-  "author": "Luke Autry <lukeautry@gmail.com> (http://www.lukeautry.com)",
+  "author": "Sczlog",
   "license": "MIT",
   "dependencies": {
     "promise.any": "^2.0.2",
@@ -36,7 +36,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/lukeautry/tsoa.git"
+    "url": "https://github.com/Sczlog/tsoa.git"
   },
   "engines": {
     "yarn": ">=1.9.4",

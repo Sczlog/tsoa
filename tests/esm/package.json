@@ -1,19 +1,19 @@
 {
-  "name": "tsoa-tests-esm",
+  "name": "@smartx/tsoa-tests-esm",
   "private": true,
   "description": "Build swagger-compliant REST APIs using TypeScript and Node",
-  "version": "4.0.0-beta.0",
+  "version": "0.0.1-rc.3",
   "type": "module",
   "sideEffects": false,
   "scripts": {
     "pretest": "node --experimental-loader=ts-node/esm prepare.ts",
     "test": "cross-env NODE_ENV=tsoa_test mocha --exit --timeout 5000"
   },
-  "author": "Luke Autry <lukeautry@gmail.com> (http://www.lukeautry.com)",
+  "author": "Sczlog",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/lukeautry/tsoa.git"
+    "url": "https://github.com/Sczlog/tsoa.git"
   },
   "engines": {
     "yarn": ">=1.9.4",

@@ -2,7 +2,7 @@ import * as ts from 'typescript';
 import * as YAML from 'yamljs';
 import { ExtendedSpecConfig } from '../cli';
 import { MetadataGenerator } from '../metadataGeneration/metadataGenerator';
-import { Tsoa, Swagger } from '@tsoa/runtime';
+import { Tsoa, Swagger } from '@smartx/tsoa-runtime';
 import { SpecGenerator2 } from '../swagger/specGenerator2';
 import { SpecGenerator3 } from '../swagger/specGenerator3';
 import { fsMkDir, fsWriteFile } from '../utils/fs';
@@ -25,6 +25,17 @@ export const generateSpec = async (
 ) => {
   if (!metadata) {
     metadata = new MetadataGenerator(swaggerConfig.entryFile, compilerOptions, ignorePaths, swaggerConfig.controllerPathGlobs).Generate();
+  }
+  for (const controller of metadata.controllers) {
+    for (const method of controller.methods) {
+      for (const parameter of method.parameters) {
+        if (parameter.in === 'formData') {
+          if (parameter.type.dataType !== 'file' && parameter.type.dataType !== 'string') {
+            parameter.type = { dataType: 'string' };
+          }
+        }
+      }
+    }
   }
 
   let spec: Swagger.Spec;

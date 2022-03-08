@@ -1,5 +1,5 @@
 {
-  "name": "tsoa-monorepo",
+  "name": "@smartx/tsoa-monorepo",
   "description": "Build swagger-compliant REST APIs using TypeScript and Node",
   "private": true,
   "keywords": [
@@ -15,7 +15,7 @@
     "hapi.js",
     "koa"
   ],
-  "author": "Luke Autry <lukeautry@gmail.com> (http://www.lukeautry.com)",
+  "author": "Sczlog",
   "license": "MIT",
   "husky": {
     "hooks": {
@@ -33,13 +33,13 @@
     "deploy": "yarn bump && lerna publish from-git",
     "bump": "lerna version patch -m \"Release v%s\" --force-publish",
     "clean": "lerna run clean --stream",
-    "prepare": "yarn build",
     "preversion": "yarn test",
     "test": "lerna run test --stream",
     "lint": "eslint . --ext .ts",
     "lint:fix": "yarn run lint --fix",
     "watch": "lerna run watch --parallel",
-    "lerna": "lerna"
+    "lerna": "lerna",
+    "ver": "yarn lerna version --ignore-scripts --no-git-tag-version  --no-push"
   },
   "dependencies": {},
   "devDependencies": {
@@ -54,7 +54,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/lukeautry/tsoa.git"
+    "url": "https://github.com/Sczlog/.git"
   },
   "engines": {
     "yarn": ">=1.9.4",
@@ -64,6 +64,7 @@
   "workspaces": [
     "packages/*",
     "tests",
-    "tests/esm"
+    "tests/esm",
+    "playground"
   ]
 }

@@ -5,7 +5,7 @@ import { getParameterValidators } from './../utils/validatorUtils';
 import { GenerateMetadataError } from './exceptions';
 import { getInitializerValue } from './initializer-value';
 import { MetadataGenerator } from './metadataGenerator';
-import { Tsoa } from '@tsoa/runtime';
+import { Tsoa } from '@smartx/tsoa-runtime';
 import { TypeResolver } from './typeResolver';
 import { getHeaderType } from '../utils/headerTypeHelpers';
 
@@ -224,7 +224,7 @@ export class ParameterGenerator {
 
   private getFormFieldParameter(parameter: ts.ParameterDeclaration): Tsoa.Parameter {
     const parameterName = (parameter.name as ts.Identifier).text;
-    const type: Tsoa.Type = { dataType: 'string' };
+    const type: Tsoa.Type = this.getValidatedType(parameter);
 
     if (!this.supportPathDataType(type)) {
       throw new GenerateMetadataError(`Parameter '${parameterName}:${type.dataType}' can't be passed as form field parameter in '${this.method.toUpperCase()}'.`, parameter);
@@ -375,21 +375,76 @@ export class ParameterGenerator {
     return ['header', 'query', 'path', 'body', 'bodyprop', 'request', 'res', 'inject', 'uploadedfile', 'uploadedfiles', 'formfield'].some(d => d === decoratorName.toLocaleLowerCase());
   }
 
-  private supportPathDataType(parameterType: Tsoa.Type) {
+  private supportPathDataType(parameterType: Tsoa.Type, visited?: Set<string>): boolean {
     const supportedPathDataTypes: Tsoa.TypeStringLiteral[] = ['string', 'integer', 'long', 'float', 'double', 'date', 'datetime', 'buffer', 'boolean', 'enum', 'refEnum', 'file', 'any'];
     if (supportedPathDataTypes.find(t => t === parameterType.dataType)) {
       return true;
     }
 
     if (parameterType.dataType === 'refAlias') {
-      return this.supportPathDataType(parameterType.type);
+      return this.supportPathDataType(parameterType.type, visited);
     }
 
     if (parameterType.dataType === 'union') {
-      return !parameterType.types.map(t => this.supportPathDataType(t)).some(t => t === false);
+      return !parameterType.types.map(t => this.supportPathDataType(t, visited)).some(t => t === false);
     }
 
+    if (parameterType.dataType === 'refObject') {
+      return this.isSerializableRefObject(parameterType, visited ? visited : new Set([parameterType.refName]));
+    }
+
+    if (parameterType.dataType === 'array') {
+      return this.supportPathDataType(parameterType.elementType, visited);
+    }
+    if (parameterType.dataType === 'nestedObjectLiteral') {
+      return this.isSerializableNestedObjectLiteral(parameterType, visited);
+    }
     return false;
+  }
+
+  private isSerializableRefObject(type: Tsoa.RefObjectType, visited = new Set<string>()): boolean {
+    if (visited.has(type.refName)) {
+      return true;
+    } else {
+      // if (type.refName.startsWith('Maybe<')) {
+      //   // not to check maybe<
+      //   return true;
+      // }
+      visited.add(type.refName);
+    }
+    if (!type.properties) {
+      return true;
+    }
+    let flag = true;
+    if (type.additionalProperties) {
+      flag = flag && this.supportPathDataType(type.additionalProperties, visited);
+    }
+    flag =
+      flag &&
+      !type.properties
+        .map(p => {
+          if ('refName' in p.type) {
+            if (visited.has(p.type.refName)) {
+              return true;
+            } else {
+              visited.add(p.type.refName);
+            }
+          }
+          return this.supportPathDataType(p.type, visited);
+        })
+        .some(p => p === false);
+    return flag;
+  }
+
+  private isSerializableNestedObjectLiteral(type: Tsoa.NestedObjectLiteralType, visited = new Set<string>()): boolean {
+    let flag = true;
+    if (type.properties) {
+      flag = flag && !type.properties.map(p => this.supportPathDataType(p.type, visited)).some(p => p === false);
+    }
+    if (type.additionalProperties) {
+      flag = flag && this.supportPathDataType(type.additionalProperties, visited);
+    }
+    return flag;
   }
 
   private getValidatedType(parameter: ts.ParameterDeclaration) {

@@ -1,7 +1,7 @@
 import 'mocha';
 import { expect } from 'chai';
-import { MetadataGenerator } from '@tsoa/cli/metadataGeneration/metadataGenerator';
-import { Tsoa } from '@tsoa/runtime';
+import { MetadataGenerator } from '@smartx/tsoa-cli/metadataGeneration/metadataGenerator';
+import { Tsoa } from '@smartx/tsoa-runtime';
 
 describe('Sub resource route generation', () => {
   const metadata = new MetadataGenerator('./fixtures/controllers/subresourceController.ts').Generate();

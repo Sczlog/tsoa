@@ -1,4 +1,4 @@
-import { Route, Get, Post, Path, Delete, Head } from '@tsoa/runtime';
+import { Route, Get, Post, Path, Delete, Head } from '@smartx/tsoa-runtime';
 
 @Route('GetTest')
 export class DuplicatePathParamTestController {

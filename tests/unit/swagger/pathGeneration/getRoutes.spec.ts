@@ -1,8 +1,8 @@
 import { expect } from 'chai';
 import 'mocha';
-import { MetadataGenerator } from '@tsoa/cli/metadataGeneration/metadataGenerator';
-import { SpecGenerator2 } from '@tsoa/cli/swagger/specGenerator2';
-import { SpecGenerator3 } from '@tsoa/cli/swagger/specGenerator3';
+import { MetadataGenerator } from '@smartx/tsoa-cli/metadataGeneration/metadataGenerator';
+import { SpecGenerator2 } from '@smartx/tsoa-cli/swagger/specGenerator2';
+import { SpecGenerator3 } from '@smartx/tsoa-cli/swagger/specGenerator3';
 import { getDefaultExtendedOptions } from '../../../fixtures/defaultOptions';
 import { VerifyPathableNumberParameter, VerifyPathableParameter, VerifyPathableStringParameter } from '../../utilities/verifyParameter';
 import { VerifyPath } from '../../utilities/verifyPath';

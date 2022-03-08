@@ -1,4 +1,4 @@
-import { Route, Get, Path, Query, Header, Post, Body, BodyProp, Example, Res, TsoaResponse } from '@tsoa/runtime';
+import { Route, Get, Path, Query, Header, Post, Body, BodyProp, Example, Res, TsoaResponse } from '@smartx/tsoa-runtime';
 import { exampleResponse } from './consts';
 
 /**

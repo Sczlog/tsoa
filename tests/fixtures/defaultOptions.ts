@@ -1,5 +1,5 @@
-import { ExtendedSpecConfig } from '@tsoa/cli/cli';
-import { Config } from '@tsoa/runtime';
+import { ExtendedSpecConfig } from '@smartx/tsoa-cli/cli';
+import { Config } from '@smartx/tsoa-runtime';
 export function getDefaultOptions(outputDirectory = '', entryFile = ''): Config {
   return {
     entryFile,

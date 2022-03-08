@@ -1,4 +1,4 @@
-import { Get, Route } from '@tsoa/runtime';
+import { Get, Route } from '@smartx/tsoa-runtime';
 
 interface InvalidExtension {
   /**

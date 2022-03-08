@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import 'mocha';
-import { Tsoa } from '@tsoa/runtime';
-import { RouteGenerator } from '@tsoa/cli/routeGeneration/routeGenerator';
+import { Tsoa } from '@smartx/tsoa-runtime';
+import { RouteGenerator } from '@smartx/tsoa-cli/routeGeneration/routeGenerator';
 
 describe('RouteGenerator', () => {
   describe('.buildModels', () => {

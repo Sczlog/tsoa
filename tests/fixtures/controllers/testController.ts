@@ -1,4 +1,4 @@
-import { Controller, Get, Route, SuccessResponse } from '@tsoa/runtime';
+import { Controller, Get, Route, SuccessResponse } from '@smartx/tsoa-runtime';
 import { TestModel } from '../testModel';
 import { NonFactoryDecorator } from '../custom/non-factory-decorator';
 import { ModelService } from '../services/modelService';
