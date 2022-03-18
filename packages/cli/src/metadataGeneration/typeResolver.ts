@@ -323,6 +323,10 @@ export class TypeResolver {
         );
       }
       if (hasType(symbol.valueDeclaration) && symbol.valueDeclaration.type) {
+        if (this.typeNode.objectType.getText() === 'Scalars') {
+          // for scalar type, try resolve them
+          return this.tryResolveScalar(symbol.valueDeclaration.type, this.current, this.typeNode, this.context, this.referencer);
+        }
         return new TypeResolver(symbol.valueDeclaration.type, this.current, this.typeNode, this.context, this.referencer).resolve();
       }
       const declaration = this.current.typeChecker.getTypeOfSymbolAtLocation(symbol, this.typeNode.objectType);
@@ -464,16 +468,6 @@ export class TypeResolver {
         return ['isInt', 'isLong', 'isFloat', 'isDouble'].some(m => m === name);
       });
       if (tags.length === 0) {
-        if (ts.isIndexedAccessTypeNode(parentNode) && ts.isLiteralTypeNode(parentNode.indexType) && ts.isLiteralExpression(parentNode.indexType.literal)) {
-          switch (parentNode.indexType.literal.text) {
-            case 'Int':
-              return { dataType: 'integer' };
-            case 'Long':
-              return { dataType: 'long' };
-            case 'Float':
-              return { dataType: 'double' };
-          }
-        }
         return { dataType: 'double' };
       }
 
@@ -1187,6 +1181,27 @@ export class TypeResolver {
 
   private getDecoratorsByIdentifier(node: ts.Node, id: string) {
     return getDecorators(node, identifier => identifier.text === id);
+  }
+
+  private tryResolveScalar(typeNode: ts.TypeNode, current: MetadataGenerator, parentNode: ts.IndexedAccessTypeNode, context: Context = {}, referencer?: ts.TypeNode): Tsoa.Type {
+    switch (((parentNode.indexType as ts.LiteralTypeNode).literal as ts.LiteralExpression).text) {
+      case 'Int':
+        return { dataType: 'integer' };
+      case 'Float':
+        return { dataType: 'double' };
+      case 'Long':
+        return { dataType: 'long' };
+      case 'ID':
+      case 'String':
+      case 'Boolean':
+      case 'DateTime':
+      case 'Json':
+      case 'UUID':
+      case 'Upload':
+      default:
+        // if can't
+        return new TypeResolver((typeNode as ts.IndexedAccessTypeNode).objectType, current, parentNode, context, referencer).resolve();
+    }
   }
 }
 

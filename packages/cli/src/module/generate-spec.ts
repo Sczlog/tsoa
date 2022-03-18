@@ -26,6 +26,10 @@ export const generateSpec = async (
   if (!metadata) {
     metadata = new MetadataGenerator(swaggerConfig.entryFile, compilerOptions, ignorePaths, swaggerConfig.controllerPathGlobs).Generate();
   }
+  metadata = {
+    ...metadata,
+    controllers: JSON.parse(JSON.stringify(metadata.controllers)),
+  };
   for (const controller of metadata.controllers) {
     for (const method of controller.methods) {
       for (const parameter of method.parameters) {

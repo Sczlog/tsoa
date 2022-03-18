@@ -39,7 +39,14 @@ export class ValidationService {
         return value;
       }
     }
-
+    // try parse it as formData always come as string
+    if (property['in'] === 'formData') {
+      try {
+        value = JSON.parse(value);
+      } catch {
+        // just keep it as string and go validation
+      }
+    }
     switch (property.dataType) {
       case 'string':
         return this.validateString(name, value, fieldErrors, property.validators, parent);
@@ -70,28 +77,9 @@ export class ValidationService {
       case 'any':
         return value;
       case 'nestedObjectLiteral':
-        // for nested object literal in formData, we need to parse string to object before validating
-        if ('in' in property && property['in'] === 'formData' && (typeof value === 'string' || (typeof value === 'object' && Object.prototype.toString.call(value) === '[object String]'))) {
-          try {
-            value = JSON.parse(value);
-          } catch (e: any) {
-            // keep it as string
-          }
-        }
         return this.validateNestedObjectLiteral(name, value, fieldErrors, minimalSwaggerConfig, property.nestedProperties, property.additionalProperties, parent);
       default:
-        if (
-          property.ref &&
-          'in' in property &&
-          property['in'] === 'formData' &&
-          (typeof value === 'string' || (typeof value === 'object' && Object.prototype.toString.call(value) === '[object String]'))
-        ) {
-          try {
-            value = JSON.parse(value);
-          } catch {
-            // keep it as string
-          }
-
+        if (property.ref) {
           return this.validateModel({ name, value, modelDefinition: this.models[property.ref], fieldErrors, parent, minimalSwaggerConfig });
         }
         return value;

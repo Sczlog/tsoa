@@ -1274,32 +1274,6 @@
   resolved "https://registry.yarnpkg.com/@tsconfig/node16/-/node16-1.0.2.tgz#423c77877d0569db20e1fc80885ac4118314010e"
   integrity sha512-eZxlbI8GZscaGS7kkc/trHTT5xgrjH3/1n2JDwusC9iahPKWMRvRjJSAN5mCXviuTGQ/lHnhvv8Q1YTpnfz9gA==
 
-"@tsoa/cli@^4.0.0-rc.0":
-  version "4.0.0-rc.0"
-  resolved "https://registry.yarnpkg.com/@tsoa/cli/-/cli-4.0.0-rc.0.tgz#0ee412c85267f413b264e777275d469e2afa24a3"
-  integrity sha512-6w8VWHYhWRXWMdOr+rd/K61YCPis/orRB7/s6nMH8AGH/baVlR3h+jU8IwnT5XDQ5wYZ/mNhWTdnu+p2nfbZSw==
-  dependencies:
-    "@tsoa/runtime" "^4.0.0-beta.0"
-    deepmerge "^4.2.2"
-    fs-extra "^8.1.0"
-    glob "^7.1.6"
-    handlebars "^4.7.7"
-    merge "^2.1.0"
-    minimatch "^3.0.4"
-    typescript "^4.5.4"
-    validator "^13.6.0"
-    yamljs "^0.3.0"
-    yargs "^15.4.1"
-
-"@tsoa/runtime@^4.0.0-beta.0":
-  version "4.0.0-beta.0"
-  resolved "https://registry.yarnpkg.com/@tsoa/runtime/-/runtime-4.0.0-beta.0.tgz#778d473f26338ad8801dca861d6263fd12933947"
-  integrity sha512-jsKGusDLRuh4XL4XWbpwdrJUOg3vPfq0vgWVst318/wYKWI+QIZfQQWju/TsvR1KWHJjY9W9HR87VaM/F3cPng==
-  dependencies:
-    promise.any "^2.0.2"
-    reflect-metadata "^0.1.13"
-    validator "^13.6.0"
-
 "@types/accepts@*":
   version "1.3.5"
   resolved "https://registry.yarnpkg.com/@types/accepts/-/accepts-1.3.5.tgz#c34bec115cfc746e04fe5a059df4ce7e7b391575"

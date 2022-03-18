@@ -423,7 +423,25 @@ export class SpecGenerator2 extends SpecGenerator {
   protected getSwaggerTypeForUnionType(type: Tsoa.UnionType) {
     const typesWithoutUndefined = type.types.filter(x => x.dataType !== 'undefined');
     // Backwards compatible representation of a literal enumeration
-    if (typesWithoutUndefined.every(subType => subType.dataType === 'enum')) {
+    if (typesWithoutUndefined.length === 1) {
+      const swaggerType = this.getSwaggerType(typesWithoutUndefined[0]);
+      const isRef = !!swaggerType.$ref;
+
+      if (isRef) {
+        // use allof with x-nullable vendor extension to represent nullable union
+        return {
+          allOf: [swaggerType, { 'x-nullable': true }],
+        };
+      } else {
+        // non ref type, just add x-nullable vendor extension
+        swaggerType['x-nullable'] = true;
+        if (swaggerType.type === 'array') {
+          // add x-omitempty vendor extension for array types (go swagger)
+          swaggerType['x-omitempty'] = true;
+        }
+        return swaggerType;
+      }
+    } else if (typesWithoutUndefined.every(subType => subType.dataType === 'enum')) {
       const mergedEnum: Tsoa.EnumType = { dataType: 'enum', enums: [] };
       typesWithoutUndefined.forEach(t => {
         mergedEnum.enums = [...mergedEnum.enums, ...(t as Tsoa.EnumType).enums];
