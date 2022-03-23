@@ -65,6 +65,7 @@
     "packages/*",
     "tests",
     "tests/esm",
+    "tests/smartx",
     "playground"
   ]
 }
