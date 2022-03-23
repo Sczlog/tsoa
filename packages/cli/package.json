@@ -1,7 +1,7 @@
 {
   "name": "@smartx/tsoa-cli",
   "description": "Build swagger-compliant REST APIs using TypeScript and Node",
-  "version": "0.0.1-rc.3",
+  "version": "0.0.1-rc.4",
   "main": "./dist/index.js",
   "typings": "./dist/index.d.ts",
   "keywords": [
@@ -27,7 +27,7 @@
   "author": "Sczlog",
   "license": "MIT",
   "dependencies": {
-    "@smartx/tsoa-runtime": "^0.0.1-rc.3",
+    "@smartx/tsoa-runtime": "^0.0.1-rc.4",
     "deepmerge": "^4.2.2",
     "fs-extra": "^8.1.0",
     "glob": "^7.1.6",

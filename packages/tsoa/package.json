@@ -1,7 +1,7 @@
 {
   "name": "@smartx/tsoa",
   "description": "Tsoa fork by smartx",
-  "version": "0.0.1-rc.3",
+  "version": "0.0.1-rc.4",
   "main": "./dist/index.js",
   "typings": "./dist/index.d.ts",
   "keywords": [
@@ -25,8 +25,8 @@
   "author": "Sczlog",
   "license": "MIT",
   "dependencies": {
-    "@smartx/tsoa-cli": "^0.0.1-rc.3",
-    "@smartx/tsoa-runtime": "^0.0.1-rc.3"
+    "@smartx/tsoa-cli": "^0.0.1-rc.4",
+    "@smartx/tsoa-runtime": "^0.0.1-rc.4"
   },
   "devDependencies": {
     "@types/node": "^14.11.1",
