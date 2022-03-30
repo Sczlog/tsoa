@@ -18,6 +18,9 @@ type ScalarNumberType = {
   long: Scalars['Long'];
   int: Scalars['Int'];
   float: Scalars['Float'];
+  longs: Array<Scalars['Long']>;
+  ints: Array<Scalars['Int']>;
+  floats: Array<Scalars['Float']>;
 };
 
 type Ref = {
